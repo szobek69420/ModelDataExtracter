@@ -1,11 +1,15 @@
 package main.java.org;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.Event;
+import javafx.event.EventType;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import main.java.org.controller.MainController;
 
@@ -31,6 +35,7 @@ public class Main extends Application {
         mainSceneController.init();
 
         primaryStage.setScene(scene);
+        primaryStage.setOnCloseRequest((event)->{ Platform.exit(); });
         primaryStage.show();
     }
 }

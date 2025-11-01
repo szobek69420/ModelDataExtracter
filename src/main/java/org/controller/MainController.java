@@ -16,12 +16,14 @@ public class MainController {
     private Pane fileBrowser;
     @FXML
     private AnchorPane fileBrowserParent;
+    @FXML
+    private Text currentDirPath;
     private FileBrowserHandler fileBrowserHandler;
 
     public void init()
     {
         Text text = new Text("nigga");
         buttonContainer.getChildren().add(text);
-        fileBrowserHandler=new FileBrowserHandler(fileBrowser, fileBrowserParent);
+        fileBrowserHandler=new FileBrowserHandler(fileBrowser, fileBrowserParent, currentDirPath);
     }
 }

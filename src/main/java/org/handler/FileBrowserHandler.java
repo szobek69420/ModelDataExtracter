@@ -4,6 +4,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.text.Text;
 import main.java.org.element.FileButton;
 
 import java.io.File;
@@ -13,27 +14,31 @@ import java.util.Arrays;
 public class FileBrowserHandler {
     private AnchorPane containerParent;
     private Pane container;
+    private Text currentDirText;
 
-    public FileBrowserHandler(Pane container, AnchorPane containerParent)
+    public FileBrowserHandler(Pane container, AnchorPane containerParent, Text currentDirText)
     {
         this.container=container;
         this.containerParent=containerParent;
+        this.currentDirText=currentDirText;
 
-        update(new File("."));
+        String tempPath=new File(".").getAbsolutePath();
+        update(new File(tempPath.substring(0, tempPath.length()-2)));
 
         this.containerParent.widthProperty().addListener((obs, oldVal, newVal)->{
-            this.container.setMinWidth((double)newVal-2.0);
-            this.container.maxWidth((double)newVal-2.0);
-            this.container.prefWidth((double)newVal-2.0);
-            System.out.println(this.container.getWidth());
+            this.container.setMinWidth((double)newVal-15);
+            this.container.setMaxWidth((double)newVal-15);
+            this.container.setPrefWidth((double)newVal-15);
         });
     }
 
     public void update(File currentDir)
     {
         ArrayList<File> files=new ArrayList<>();
-        files.add(currentDir.getParentFile());
-        for(File file : currentDir.listFiles())
+        files.add(currentDir.getParentFile()==null? currentDir:currentDir.getParentFile());  //add parent
+        for(File file : Arrays.stream(currentDir.listFiles()).filter((file)->file.isDirectory()).toList()) //add directories
+            files.add(file);
+        for(File file : Arrays.stream(currentDir.listFiles()).filter(this::is3DModel).toList()) //add 3d files
             files.add(file);
 
         container.getChildren().clear();
@@ -41,15 +46,32 @@ public class FileBrowserHandler {
         double width = containerParent.getWidth();
         double height=files.size()*20.0f;
 
-        container.minHeight(container.maxHeight(container.prefHeight(height)));
+        container.setMinHeight(height);
+        container.setMaxHeight(height);
+        container.setPrefHeight(height);
 
         ArrayList<FileButton> buttons = new ArrayList<>();
         for(int i=0;i<files.size();i++)
         {
-            FileButton fb= new FileButton(files.get(i), i==0?"..": files.get(i).getName());
-            fb.setX(0);
-            fb.setY(i*20.0f);
+            FileButton fb= new FileButton(this, files.get(i), i==0?"..": files.get(i).getName());
+            fb.setTranslateX(0);
+            fb.setTranslateY(i*20.0);
             container.getChildren().add(fb);
         }
+
+        currentDirText.setText(currentDir.getPath());
+    }
+
+    private boolean is3DModel(File file)
+    {
+        if(!file.isFile())
+            return false;
+
+        if(file.getName().endsWith(".obj"))
+            return true;
+        if(file.getName().endsWith(".stl"))
+            return true;
+
+        return false;
     }
 }
