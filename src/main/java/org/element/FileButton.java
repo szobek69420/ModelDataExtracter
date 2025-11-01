@@ -49,8 +49,8 @@ public class FileButton extends Pane {
 
                 if(System.currentTimeMillis()-DOUBLE_CLICK_THRESHOLD<lastClicked)
                     fb.update(file);
-                else
-                    lastClicked=System.currentTimeMillis();
+
+                lastClicked=System.currentTimeMillis();
             });
         }
         else
@@ -61,8 +61,8 @@ public class FileButton extends Pane {
 
                 if(System.currentTimeMillis()-DOUBLE_CLICK_THRESHOLD<lastClicked)
                     System.out.println(file.getName()+" imported");
-                else
-                    lastClicked=System.currentTimeMillis();
+
+                lastClicked=System.currentTimeMillis();
             });
         }
 

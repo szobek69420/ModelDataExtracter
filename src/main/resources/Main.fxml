@@ -11,9 +11,9 @@
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.org.controller.MainController">
    <children>
       <FlowPane fx:id="buttonContainer" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="200.0" VBox.vgrow="NEVER" />
-      <SplitPane dividerPositions="0.29797979797979796" prefHeight="160.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+      <SplitPane dividerPositions="0.31605351170568563" prefHeight="160.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
         <items>
-            <AnchorPane fx:id="fileBrowserParent" prefHeight="200.0" prefWidth="200.0">
+            <AnchorPane fx:id="fileBrowserParent" maxWidth="-Infinity" prefHeight="200.0" prefWidth="400.0">
                <children>
                   <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
@@ -31,7 +31,7 @@
                   </VBox>
                </children>
             </AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
+          <AnchorPane fx:id="renderSceneParent" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-background-color: transparent;" />
         </items>
       </SplitPane>
    </children>
