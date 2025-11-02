@@ -1,6 +1,7 @@
 package main.java.org.handler;
 
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
+import com.interactivemesh.jfx.importer.stl.StlMeshImporter;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.geometry.Point3D;
@@ -15,8 +16,10 @@ import javafx.scene.paint.Paint;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
+import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
+import main.java.org.GeometryExporter;
 
 import java.io.File;
 
@@ -47,9 +50,14 @@ public class RenderSceneHandler {
         camera.getTransforms().add(new Translate(0,0,-15));
 
         //import the default model
-        importObj(new File(this.getClass().getResource("/models/default_model/kocsi.obj").getFile()));
+        importedModel=new MeshView();
         importedModel.getTransforms().add(new Translate(0,0,0));
+        importedModel.setOpacity(1.0);
+        importedModel.setMaterial(new PhongMaterial(new Color(1.0,1.0,1.0,1)));
+
         sceneRoot.getChildren().add(importedModel);
+
+        importModel(new File(this.getClass().getResource("/models/default_model/kocsi.obj").getFile()));
 
         //final touches
         this.scene.setCamera(this.camera);
@@ -73,15 +81,49 @@ public class RenderSceneHandler {
         updateCum();
     }
 
-    public void importObj(File file)
+    public boolean importModel(File file)
+    {
+        if(!file.isFile())
+            return false;
+
+        if(file.getName().endsWith(".obj"))
+        {
+            importObj(file);
+            return true;
+        }
+        if(file.getName().endsWith(".stl"))
+        {
+            importStl(file);
+            return true;
+        }
+
+        return false;
+    }
+
+    public void exportModel()
+    {
+        GeometryExporter.exportModel((TriangleMesh) importedModel.getMesh(), new File("D:/"), "sigma");
+    }
+
+    private void importObj(File file)
     {
         ObjModelImporter importer = new ObjModelImporter();
         importer.read(file);
-        importedModel=importer.getImport()[0];
+        importedModel.setMesh(importer.getImport()[0].getMesh());
+        importer.close();
+    }
+
+    private void importStl(File file)
+    {
+        if(importedModel!=null)
+            sceneRoot.getChildren().remove(importedModel);
+
+        StlMeshImporter importer = new StlMeshImporter();
+        importer.read(file);
+        TriangleMesh importedMesh =importer.getImport();
         importer.close();
 
-        importedModel.setOpacity(1.0);
-        importedModel.setMaterial(new PhongMaterial(new Color(1.0,1.0,1.0,1)));
+        importedModel.setMesh(importedMesh);
     }
 
     private void updateCum()

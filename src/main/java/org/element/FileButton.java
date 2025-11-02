@@ -60,7 +60,7 @@ public class FileButton extends Pane {
                     return;
 
                 if(System.currentTimeMillis()-DOUBLE_CLICK_THRESHOLD<lastClicked)
-                    System.out.println(file.getName()+" imported");
+                    System.out.println(file.getName()+" imported: "+fb.controller.getRenderSceneHandler().importModel(file));
 
                 lastClicked=System.currentTimeMillis();
             });

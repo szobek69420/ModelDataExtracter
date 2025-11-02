@@ -5,6 +5,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
+import main.java.org.controller.MainController;
 import main.java.org.element.FileButton;
 
 import java.io.File;
@@ -16,8 +17,11 @@ public class FileBrowserHandler {
     private Pane container;
     private Text currentDirText;
 
-    public FileBrowserHandler(Pane container, AnchorPane containerParent, Text currentDirText)
+    public final MainController controller;
+
+    public FileBrowserHandler(MainController controller, Pane container, AnchorPane containerParent, Text currentDirText)
     {
+        this.controller=controller;
         this.container=container;
         this.containerParent=containerParent;
         this.currentDirText=currentDirText;
