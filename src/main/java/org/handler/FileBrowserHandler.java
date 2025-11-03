@@ -75,6 +75,8 @@ public class FileBrowserHandler {
             return true;
         if(file.getName().endsWith(".stl"))
             return true;
+        if(file.getName().endsWith(".geometry"))
+            return true;
 
         return false;
     }

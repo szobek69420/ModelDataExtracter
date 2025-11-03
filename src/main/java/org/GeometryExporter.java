@@ -1,5 +1,7 @@
 package main.java.org;
 
+import com.sun.javafx.collections.ObservableFloatArrayImpl;
+import com.sun.javafx.scene.shape.ObservableFaceArrayImpl;
 import javafx.collections.ObservableFloatArray;
 import javafx.collections.ObservableIntegerArray;
 import javafx.scene.shape.ObservableFaceArray;
@@ -72,5 +74,55 @@ public class GeometryExporter {
 
 
         return true;
+    }
+
+    public static TriangleMesh importModel(File file)
+    {
+        try(BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream(file))))
+        {
+            int vertexCount;
+            float[] vertices;
+            float[] uvs;
+            int[] indices;
+
+            String temp;
+            String[] temps;
+
+            temp=br.readLine();
+            vertexCount=Integer.parseInt(temp.substring(14));
+
+            vertices=new float[3*vertexCount];
+            uvs=new float[2*vertexCount];
+            indices=new int[vertexCount];
+
+            for(int i=0;i<vertexCount;i++)
+            {
+                temp=br.readLine();
+                temps=temp.split(" ");
+
+                vertices[3*i]=Float.parseFloat(temps[0]);
+                vertices[3*i+1]=Float.parseFloat(temps[1]);
+                vertices[3*i+2]=Float.parseFloat(temps[2]);
+
+                uvs[2*i]=Float.parseFloat(temps[3]);
+                uvs[2*i+1]=Float.parseFloat(temps[4]);
+
+                indices[i]=i;
+            }
+
+            TriangleMesh mesh = new TriangleMesh(VertexFormat.POINT_TEXCOORD);
+            mesh.getPoints().clear();
+            mesh.getPoints().addAll(vertices,0, vertices.length);
+            mesh.getTexCoords().clear();
+            mesh.getTexCoords().addAll(uvs,0, uvs.length);
+            mesh.getFaces().clear();
+            mesh.getFaces().addAll(indices, 0, indices.length);
+
+            return mesh;
+        }
+        catch(Exception ex)
+        {
+            return null;
+        }
     }
 }

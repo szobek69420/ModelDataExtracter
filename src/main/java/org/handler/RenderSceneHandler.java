@@ -4,6 +4,7 @@ import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import com.interactivemesh.jfx.importer.stl.StlMeshImporter;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.input.MouseEvent;
@@ -19,7 +20,10 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import main.java.org.GeometryExporter;
+import main.java.org.controller.ExportMenuController;
 
 import java.io.File;
 
@@ -34,6 +38,7 @@ public class RenderSceneHandler {
     private double distance=10.0;
 
     private MeshView importedModel;
+    private File importedModelPath;
 
     public RenderSceneHandler(AnchorPane sceneParent)
     {
@@ -89,11 +94,19 @@ public class RenderSceneHandler {
         if(file.getName().endsWith(".obj"))
         {
             importObj(file);
+            importedModelPath=file;
             return true;
         }
         if(file.getName().endsWith(".stl"))
         {
             importStl(file);
+            importedModelPath=file;
+            return true;
+        }
+        if(file.getName().endsWith(".geometry"))
+        {
+            importGeometry(file);
+            importedModelPath=file;
             return true;
         }
 
@@ -102,7 +115,23 @@ public class RenderSceneHandler {
 
     public void exportModel()
     {
-        GeometryExporter.exportModel((TriangleMesh) importedModel.getMesh(), new File("D:/"), "sigma");
+
+        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/Export.fxml"));
+        Parent exportRoot=null;
+        try{ exportRoot = loader.load(); }
+        catch(Exception ex){ }
+        ExportMenuController exportController=loader.getController();
+
+        Stage stage=new Stage();
+        Scene scene=new Scene(exportRoot);
+        stage.setScene(scene);
+
+        stage.initOwner(this.scene.getScene().getWindow());
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setTitle("Export "+importedModelPath.getName());
+        stage.show();
+
+        exportController.init(stage, (TriangleMesh) importedModel.getMesh(), importedModelPath.getParentFile());
     }
 
     private void importObj(File file)
@@ -115,14 +144,17 @@ public class RenderSceneHandler {
 
     private void importStl(File file)
     {
-        if(importedModel!=null)
-            sceneRoot.getChildren().remove(importedModel);
-
         StlMeshImporter importer = new StlMeshImporter();
         importer.read(file);
         TriangleMesh importedMesh =importer.getImport();
         importer.close();
 
+        importedModel.setMesh(importedMesh);
+    }
+
+    private void importGeometry(File file)
+    {
+        TriangleMesh importedMesh = GeometryExporter.importModel(file);
         importedModel.setMesh(importedMesh);
     }
 
@@ -146,7 +178,7 @@ public class RenderSceneHandler {
 
         @Override
         public void handle(ScrollEvent event) {
-            this.handler.distance+=SENSITIVITY*event.getDeltaY();
+            this.handler.distance-=SENSITIVITY*event.getDeltaY();
             if(this.handler.distance<0.1) this.handler.distance=0.1;
 
             this.handler.updateCum();
