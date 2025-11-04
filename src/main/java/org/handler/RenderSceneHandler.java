@@ -7,6 +7,8 @@ import javafx.event.EventType;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
@@ -24,6 +26,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import main.java.org.GeometryExporter;
 import main.java.org.controller.ExportMenuController;
+import main.java.org.controller.MainController;
 
 import java.io.File;
 
@@ -31,6 +34,7 @@ public class RenderSceneHandler {
     private SubScene scene;
     private Group sceneRoot;
     private AnchorPane sceneParent;
+    private Button exportButton;
 
     private PerspectiveCamera camera;
     private double pitch=-30.0;
@@ -63,6 +67,13 @@ public class RenderSceneHandler {
         sceneRoot.getChildren().add(importedModel);
 
         importModel(new File(this.getClass().getResource("/models/default_model/kocsi.obj").getFile()));
+
+        //create the export button
+        exportButton=new Button("Export");
+        sceneParent.getChildren().add(exportButton);
+        AnchorPane.setBottomAnchor(exportButton, 10.0);
+        AnchorPane.setRightAnchor(exportButton, 10.0);
+        exportButton.setOnMouseClicked(event->this.exportModel());
 
         //final touches
         this.scene.setCamera(this.camera);

@@ -35,7 +35,7 @@ public class GeometryExporter {
             {
                 writer.write("vertex count: "+faces.size()/3+""+(char)10);
 
-                for(int i=0;i<faces.size();i+=3)
+                for(int i=0;i<faces.size();i+=mesh.getVertexFormat().getVertexIndexSize())
                 {
                     int vertexIndex=faces.get(i)*3;
                     int uvIndex=faces.get(i+2)*2;
@@ -54,7 +54,7 @@ public class GeometryExporter {
             {
                 writer.write("vertex count: "+faces.size()/2+""+(char)10);
 
-                for(int i=0;i<faces.size();i+=2)
+                for(int i=0;i<faces.size();i+=mesh.getVertexFormat().getVertexIndexSize())
                 {
                     int vertexIndex=faces.get(i)*3;
                     int uvIndex=faces.get(i+1)*2;
@@ -93,7 +93,7 @@ public class GeometryExporter {
 
             vertices=new float[3*vertexCount];
             uvs=new float[2*vertexCount];
-            indices=new int[vertexCount];
+            indices=new int[2*vertexCount];
 
             for(int i=0;i<vertexCount;i++)
             {
@@ -107,7 +107,8 @@ public class GeometryExporter {
                 uvs[2*i]=Float.parseFloat(temps[3]);
                 uvs[2*i+1]=Float.parseFloat(temps[4]);
 
-                indices[i]=i;
+                indices[2*i]=i;
+                indices[2*i+1]=i;
             }
 
             TriangleMesh mesh = new TriangleMesh(VertexFormat.POINT_TEXCOORD);

@@ -2,6 +2,9 @@ plugins {
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.1.0'
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'org.beryx.jlink' version '2.25.0'
+    id 'org.javamodularity.moduleplugin' version '1.8.12'
 }
 
 group 'org'
@@ -48,6 +51,26 @@ java {
 
 application {
     mainClass = 'main.java.org.Main'
+}
+
+//to build fat jars
+shadowJar {
+    duplicatesStrategy=DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes["Main-Class"] = "main.java.org.Main"
+    }
+}
+
+jlink {
+    imageZip = project.file("${buildDir}/distributions/app-${javafx.platform.classifier}.zip")
+    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+    launcher {
+        name = 'app'
+    }
+}
+
+jlinkZip {
+    group = 'distribution'
 }
 
 /*

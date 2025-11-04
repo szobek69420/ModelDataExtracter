@@ -19,9 +19,6 @@ import main.java.org.handler.RenderSceneHandler;
 
 public class MainController {
     @FXML
-    private ImageView exportButton;
-
-    @FXML
     private Pane fileBrowser;
     @FXML
     private AnchorPane fileBrowserParent;
@@ -37,42 +34,10 @@ public class MainController {
     {
         fileBrowserHandler=new FileBrowserHandler(this, fileBrowser, fileBrowserParent, currentDirPath);
         renderSceneHandler=new RenderSceneHandler(renderSceneParent);
-
-        initButtons();
-    }
-
-    private void initButtons()
-    {
-        exportButton.setImage(new Image(this.getClass().getResource("/sprites/export_icon.png").toString()));
-        exportButton.setOnMouseClicked(new ExportButtonMouseHandler(renderSceneHandler));
     }
 
     public RenderSceneHandler getRenderSceneHandler()
     {
         return renderSceneHandler;
-    }
-
-    private class ExportButtonMouseHandler implements EventHandler<MouseEvent>{
-        private RenderSceneHandler renderSceneHandler;
-        private long lastClick=-1;
-
-        public ExportButtonMouseHandler(RenderSceneHandler renderSceneHandler)
-        {
-            this.renderSceneHandler=renderSceneHandler;
-        }
-
-        @Override
-        public void handle(MouseEvent event) {
-            boolean doubleClicked=false;
-            if(event.getEventType()==MouseEvent.MOUSE_CLICKED)
-            {
-                long time=System.currentTimeMillis();
-
-                if(time-lastClick<700)
-                    renderSceneHandler.exportModel();
-
-                lastClick=time;
-            }
-        }
     }
 }

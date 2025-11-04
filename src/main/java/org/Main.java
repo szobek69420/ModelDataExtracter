@@ -34,6 +34,7 @@ public class Main extends Application {
 
         mainSceneController.init();
 
+        primaryStage.setTitle("Geometry converter for Morbius Motorsport 2026");
         primaryStage.setScene(scene);
         primaryStage.setOnCloseRequest((event)->{ Platform.exit(); });
         primaryStage.show();
