@@ -12,6 +12,7 @@ import java.io.*;
 import java.lang.reflect.Array;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 
 public class GeometryExporter {
     public static boolean exportModel(TriangleMesh mesh, File directory, String name)
@@ -41,11 +42,11 @@ public class GeometryExporter {
                     int uvIndex=faces.get(i+2)*2;
 
                     writer.write(
-                            vertices.get(vertexIndex)+" " +
-                                vertices.get(vertexIndex+1)+" "+
-                                vertices.get(vertexIndex+2)+" "+
-                                uvs.get(uvIndex)+" "+
-                                uvs.get(uvIndex+1)+""+
+                            String.format(Locale.US, "%.3f",vertices.get(vertexIndex))+" " +
+                                String.format(Locale.US,"%.3f",vertices.get(vertexIndex+1))+" "+
+                                String.format(Locale.US,"%.3f",vertices.get(vertexIndex+2))+" "+
+                                String.format(Locale.US,"%.3f",uvs.get(uvIndex))+" "+
+                                String.format(Locale.US,"%.3f",uvs.get(uvIndex+1))+""+
                                 (char)10
                             );
                 }
@@ -60,11 +61,11 @@ public class GeometryExporter {
                     int uvIndex=faces.get(i+1)*2;
 
                     writer.write(
-                            vertices.get(vertexIndex)+" " +
-                                    vertices.get(vertexIndex+1)+" "+
-                                    vertices.get(vertexIndex+2)+" "+
-                                    uvs.get(uvIndex)+" "+
-                                    uvs.get(uvIndex+1)+""+
+                            String.format(Locale.US,"%.3f",vertices.get(vertexIndex))+" " +
+                                    String.format(Locale.US,"%.3f",vertices.get(vertexIndex+1))+" "+
+                                    String.format(Locale.US,"%.3f",vertices.get(vertexIndex+2))+" "+
+                                    String.format(Locale.US,"%.3f",uvs.get(uvIndex))+" "+
+                                    String.format(Locale.US,"%.3f",uvs.get(uvIndex+1))+""+
                                     (char)10
                     );
                 }
